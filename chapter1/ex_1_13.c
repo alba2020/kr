@@ -37,7 +37,7 @@ int main()
 
     for (j = VSTEPS; j > 0; --j) {
         for (i = 1; i <= MAX; ++i) {
-            if (stats[i] >= j * max / VSTEPS)
+            if (stats[i] > j * max / VSTEPS)
                 printf("[] ");
             else
                 printf("   ");
