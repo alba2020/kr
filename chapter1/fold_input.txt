@@ -1,0 +1,6 @@
+hello, this is some line
+to be input to the program fold,
+which must fold
+some
+long
+lines
