@@ -1,4 +1,4 @@
-all: detab entab fold
+all: detab entab fold comments
 
 detab: detab.o
 	cc detab.o -o detab
@@ -14,6 +14,11 @@ fold: fold.o
 	cc fold.o -o fold
 fold.o: ex_1_22.c
 	cc -c ex_1_22.c -o fold.o
+
+comments: comments.o
+	cc comments.o -o comments
+comments.o: ex_1_23.c
+	cc -c ex_1_23.c -o comments.o
 
 clean:
 	rm *.o

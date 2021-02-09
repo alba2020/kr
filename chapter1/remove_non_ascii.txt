@@ -1,0 +1,1 @@
+perl -i.bak -pe 's/[^[:ascii:]]//g' <your file>

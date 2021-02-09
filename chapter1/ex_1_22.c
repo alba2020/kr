@@ -5,82 +5,69 @@
 
 #include <stdio.h>
 
-// #define N 10
-#define BUF_SIZE 10
+#define N 30
+#define WORD_SIZE 100
 
 int is_space(char c);
-int read_from_buf();
-int update_buf();
-void rewrite_buf();
+void print(int c);
 
-char buffer[BUF_SIZE];
-int buf_index;
-int buf_size;
+int pos;
 
 int main()
 {
-    int c, len;
+    extern int pos;
+    int c, i, j;
+    char word[WORD_SIZE];
 
-    buf_index = buf_size = len = 0;
+    pos = 0;
 
-    while((c = read_from_buf()) != EOF) {
-        if (is_space(c))
-            putchar(c);
-        else {
-            len = word_len();
+    while((c = getchar()) != EOF) {
+        if (c > 127) // non-printable
+            ;
+        else if (is_space(c)) { // print space
+            print(c);
+        } else { // read word
+            i = 0;
+            while(! is_space(c)) {
+                word[i] = c;
+                ++i;
+                c = getchar();
+            }
+            if (pos + i <= N) {
+                for (j = 0; j < i; ++j) // print word
+                    print(word[j]);
+            } else {
+                putchar('\n');
+                pos = 0;
+                for (j = 0; j < i; ++j) // print word
+                    print(word[j]);
+            }
+            print(c); // character after word
         }
     }
 
     return 0;
 }
 
+void print(int c)
+{
+    extern int pos;
+    if (c == EOF)
+        return;
+    putchar(c);
+    ++pos;
+    if (c == '\n')
+        pos = 0;
+    if (pos == N) {
+        putchar('\n');
+        pos = 0;
+    }
+}
+
 int is_space(char c)
 {
-    if (c == ' ' || c == '\t' || c == '\n')
+    if (c == ' ' || c == '\t' || c == '\n' || c == EOF)
         return 1;
     else
         return 0;
-}
-
-int read_from_buf()
-{
-    int c;
-
-    if (buf_index >= buf_size)
-        update_buf();
-
-    c = buffer[buf_index];
-    ++buf_index;
-
-    return c;
-}
-
-int update_buf()
-{
-    int c;
-    c = getchar();
-    buffer[buf_size] = c;
-    ++buf_size;
-    if (buf_size >= BUF_SIZE) {
-        rewrite_buf();
-    }
-    return c;
-}
-
-void rewrite_buf()
-{
-    if (buf_index <= 0) {
-        printf("Buffer overflow\n");
-        return;
-    }
-
-    printf("<rewrite buf>");
-
-    int i;
-    for (i = 0; buf_index + i < buf_size; ++i) {
-        buffer[i] = buffer[buf_index + i];
-    }
-    buf_size = i;
-    buf_index = 0;
-    printf("[buf_index %d buf_size %d]", buf_index, buf_size);
 }
