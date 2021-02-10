@@ -7,33 +7,20 @@
 
 #include <stdio.h>
 
-void print_string()
+void quoted(int delimeter)
 {
-    int c, prev;
-    putchar('\"'); /* second comment */
+    int c;
+    
+    putchar(delimeter); /* some comment */
     while (1) {
         putchar(c = getchar());
-        if (c == '\"' && prev != '\\') { // non-escaped double-quote
+        if (c == '\\')
+            putchar(getchar());
+        if (c == delimeter) // non-escaped delimeter
             return;
-        }
-        prev = c;
     }
 }
-
-void print_quotes()
-{
-    int c, prev;
-    putchar('\'');
-    while (1) {
-        c = getchar();
-        putchar('s');
-        if (c == '\'' && prev != '\\') { // non-escaped single-quote
-            return;
-        }
-        prev = c;
-    }
-}
-
+/* skip this comment */
 void skip_comment()
 {
     int c, prev;
@@ -46,7 +33,7 @@ void skip_comment()
     }
 }
 
-void skip_line()
+void skip_line(int first)
 {
     int c;
     while (1) {
@@ -54,7 +41,8 @@ void skip_line()
         if (c == EOF)
             return;
         if (c == '\n') {
-            putchar('\n');
+            if ( ! first)
+                putchar('\n');
             return;
         } else
             ;
@@ -63,26 +51,31 @@ void skip_line()
 
 int main()
 {
-    int c, c1;
-    char t[] = "hello";
+    int c, c1, first;
+    first = 1;
 
     while ((c = getchar()) != EOF) {
-        if (c == '\"') {
-            print_string();
-        } else if (c == '\'') {
-            print_quotes();
+        if (c == '\"' || c == '\'') {
+            first = 0;
+            quoted(c);
         } else if (c == '/') {
             c1 = getchar();
-            if (c1 == '*')
+            if (c1 == '*') {
+                first = 0;
                 skip_comment();
-            else if (c1 == '/')
-                skip_line();
-            else {
+            } else if (c1 == '/') {
+                skip_line(first);
+            } else {
                 putchar(c);
                 putchar(c1);
+                first = 0;
             }
-        } else {
+        } else { // comment
             putchar(c);
+            if (c == '\n')
+                first = 1;
+            else
+                first = 0;
         }
     }
 
