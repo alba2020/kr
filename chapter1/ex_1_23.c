@@ -55,7 +55,7 @@ int main()
     first = 1;
 
     while ((c = getchar()) != EOF) {
-        if (c == '\"' || c == '\'') {
+        if (c == '"' || c == '\'') {
             first = 0;
             quoted(c);
         } else if (c == '/') {
